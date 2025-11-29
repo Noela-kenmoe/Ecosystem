@@ -163,18 +163,38 @@ Color Entity::CalculateColorBasedOnState() const {
     return baseColor; 
 } 
  Vector2D Entity::SeekFood(const std::vector<Food>& foodSources) const {
-   std::vector<Food>searchFood;
+   std::vector<Vector2D>searchFood;
+   float minDist = std::numeric_limits<float>::max();
    //boucle qui parcours la liste de nourriture
    for(const auto& food :foodSources ){
     float Dist = position.Distance(food.position);
-    if(Dist<=size){
-     
+    if(Dist<minDist && Dist){
+        minDist=Dist;
+      
         return food.position; //permet de retourner la position de la nourriture trouvee
     }
    }
    return Vector2D{0,0};
  }
-    
+    Vector2D Entity::AvoidPredators(const std::vector<Entity>& predators) const {
+float minDist = std::numeric_limits<float>::max();
+const Entity* close=nullptr;
+Vector2D f={0,0};
+for(const auto& pre:predators){
+    if(pre.mType != EntityType::CARNIVORE)
+    continue;
+    float dist = position.Distance(pre.position);
+    if(dist<minDist ){
+    minDist = dist;
+    close = &pre;
+   }else if(!close) {
+    return {0,0};
+   }
+   f.x=position.x-close->position.x;
+   f.y=position.y-close->position.y;
+   } 
+    return f;
+}
 
 // RENDU GRAPHIQUE 
 void Entity::Render(SDL_Renderer* renderer) const { 
