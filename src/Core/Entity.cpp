@@ -79,11 +79,13 @@ void Entity::Move(float deltaTime) {
     if (chance(mRandomGenerator) < 0.02f) { 
         mVelocity = GenerateRandomDirection(); 
     }
+    StayInBounds(1200.0f, 800.0f);
     //Application du mouvement 
     position = position + mVelocity * deltaTime * 20.0f; 
     
     // Consommation d'énergie due au mouvement 
     mEnergy -= mVelocity.Distance(Vector2D(0, 0)) * deltaTime * 0.1f; 
+    
 } 
 // 🍽 MANGER
  void Entity::Eat(float energy) { 
@@ -185,15 +187,33 @@ for(const auto& pre:predators){
     continue;
     float dist = position.Distance(pre.position);
     if(dist<minDist ){
-    minDist = dist;
+    minDist = dist;                             
     close = &pre;
    }else if(!close) {
-    return {0,0};
+    return {0,0};//si l'on a aucun predateur on retourne le vecteur null
    }
    f.x=position.x-close->position.x;
    f.y=position.y-close->position.y;
    } 
     return f;
+}
+Vector2D Entity::StayInBounds (float worldWidth, float worldHeight) const{
+   float w=worldWidth, h=worldHeight;
+   Vector2D f,p=position;
+   
+ if (p.x<0){
+   f.x=-p.x; 
+}
+ if(p.x>w){
+  f.x=w-p.x;
+}
+ if(p.y<0){
+  f.y=-p.y;
+}
+ if(p.y>h){
+  f.y=h-p.y;
+}
+return f;
 }
 
 // RENDU GRAPHIQUE 

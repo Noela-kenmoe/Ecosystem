@@ -154,6 +154,14 @@ void Ecosystem::HandlePlantGrowth(float deltaTime) {
         SpawnRandomEntity(EntityType::PLANT); 
     }
  } 
+ void Ecosystem::AddEntity(std::unique_ptr<Entity> entity){
+    mEntities.push_back(std::move(entity));
+ }
+    void Ecosystem::AddFood(Vector2D position, float energy ){
+          Food nfood(position,energy);
+         mFoodSources.push_back(nfood);
+
+    }
 //RENDU 
 void Ecosystem::Render(SDL_Renderer* renderer) const { 
     // Rendu de la nourriture 
