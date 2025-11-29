@@ -134,12 +134,12 @@ bool Entity::CanReproduce() const {
 std::unique_ptr<Entity> Entity::Reproduce() { 
     if (!CanReproduce()) return nullptr; 
     
-    // Chance de reproduction 
+    // possibilite de reproduction 
     std::uniform_real_distribution<float> chance(0.0f, 1.0f); 
     if (chance(mRandomGenerator) < 0.3f) { 
     }
-        mEnergy *= 0.6f;  // Coût énergétique de la reproduction 
-        return std::make_unique<Entity>(*this);  // Utilise le constructeur de copi
+        mEnergy *= 0.6f;  // valeur énergétique de la reproduction 
+        return std::make_unique<Entity>(*this);  // Utilisation du constructeur de copi
     return nullptr; 
 } 
 
@@ -162,6 +162,19 @@ Color Entity::CalculateColorBasedOnState() const {
     }
     return baseColor; 
 } 
+ Vector2D Entity::SeekFood(const std::vector<Food>& foodSources) const {
+   std::vector<Food>searchFood;
+   //boucle qui parcours la liste de nourriture
+   for(const auto& food :foodSources ){
+    float Dist = position.Distance(food.position);
+    if(Dist<=size){
+     
+        return food.position; //permet de retourner la position de la nourriture trouvee
+    }
+   }
+   return Vector2D{0,0};
+ }
+    
 
 // RENDU GRAPHIQUE 
 void Entity::Render(SDL_Renderer* renderer) const { 
