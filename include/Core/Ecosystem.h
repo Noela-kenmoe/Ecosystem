@@ -34,7 +34,7 @@ public:
     ~Ecosystem(); 
     //MÉTHODES PUBLIQUES 
     void Initialize(int initialHerbivores, int initialCarnivores, int initialPlants);
-    void Update(float deltaTime); 
+    void Update(float deltaTime,const std::vector<Food>& foodSources); 
     void SpawnFood(int count); 
     void RemoveDeadEntities(); 
     void HandleReproduction(); 
@@ -44,7 +44,8 @@ public:
     int GetFoodCount() const { return mFoodSources.size(); } 
     Statistics GetStatistics() const { return mStats; } 
     float GetWorldWidth() const { return mWorldWidth; } 
-    float GetWorldHeight() const { return mWorldHeight; } 
+    float GetWorldHeight() const { return mWorldHeight; }
+    const std::vector <Food>& GetFood()const{ return mFoodSources;}
     // MÉTHODES DE GESTION 
     void AddEntity(std::unique_ptr<Entity> entity); 
     void AddFood(Vector2D position, float energy = 25.0f); 

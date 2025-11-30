@@ -32,7 +32,7 @@ void GameEngine::Run() {
         float deltaTime = elapsed.count(); 
         HandleEvents(); 
         if (!mIsPaused) { 
-            Update(deltaTime * mTimeScale);
+            Update(deltaTime * mTimeScale,mEcosystem.GetFood());
             // Limitation à ~60 FPS 
             SDL_Delay(16);  
         } 
@@ -90,8 +90,8 @@ void GameEngine::HandleInput(SDL_Keycode key) {
     }
  } 
 // MISE À JOUR 
-void GameEngine::Update(float deltaTime) { 
-    mEcosystem.Update(deltaTime); 
+void GameEngine::Update(float deltaTime,const std::vector<Food>& foodSources) { 
+    mEcosystem.Update(deltaTime,foodSources); 
     // Affichage occasionnel des statistiques 
     static float statsTimer = 0.0f; 
     statsTimer += deltaTime; 

@@ -40,8 +40,8 @@ public:
     ~Entity(); 
     
     //MÉTHODES PUBLIQUES 
-    void Update(float deltaTime); 
-    void Move(float deltaTime); 
+    void Update(float deltaTime,const std::vector<Food>& foodSources); 
+    void Move(float deltaTime,const std::vector<Food>& foodSources); 
     void Eat(float energy); 
     bool CanReproduce() const; 
     std::unique_ptr<Entity> Reproduce(); 
@@ -57,6 +57,7 @@ public:
     
     // MÉTHODES DE COMPORTEMENT 
     Vector2D SeekFood(const std::vector<Food>& foodSources) const; 
+    
     Vector2D AvoidPredators(const std::vector<Entity>& predators) const; 
     Vector2D StayInBounds(float worldWidth, float worldHeight) const; 
     

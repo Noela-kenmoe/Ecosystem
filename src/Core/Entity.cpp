@@ -61,30 +61,39 @@ Entity::~Entity() {
  } 
 
  //MISE À JOUR PRINCIPALE 
-void Entity::Update(float deltaTime) { 
-    if (!mIsAlive) return; 
+void Entity::Update(float deltaTime,const std::vector<Food>& foodSources) { 
+    if (!mIsAlive) return;
+    Vector2D f =SeekFood(foodSources); 
     
     //PROCESSUS DE VIE 
     ConsumeEnergy(deltaTime); 
     Age(deltaTime); 
-    Move(deltaTime); 
+    Move(deltaTime, foodSources); 
     CheckVitality(); 
 } 
 //MOUVEMENT 
-void Entity::Move(float deltaTime) { 
-    if (mType == EntityType::PLANT) return;  // Les plantes ne bougent pas 
+void Entity::Move(float deltaTime,const std::vector<Food>& foodSources) { 
+    
+    if (mType == EntityType::PLANT) return;  // Les plantes ne bougent pas
+    if(mEnergy<70.0f){//permet de verifier si l'energie de l'entité est inferieur a l'energie minimale
+        position = position + SeekFood(foodSources)* deltaTime* 0.025f;
+
+    } 
     
     //Comportement aléatoire occasionnel 
     std::uniform_real_distribution<float> chance(0.0f, 1.0f); 
     if (chance(mRandomGenerator) < 0.02f) { 
         mVelocity = GenerateRandomDirection(); 
     }
-    StayInBounds(1200.0f, 800.0f);
+    position= StayInBounds(1200.0f, 600.0f);//cadre dans lequel les entites doivent se deplacer
     //Application du mouvement 
-    position = position + mVelocity * deltaTime * 20.0f; 
+    position = position + mVelocity * deltaTime * 20.0f;
     
+    Vector2D force{0.0f,0.0f};//force represente la direction de l'intensité du mouvement que l'entité doit utiliser pour se déplacer
+    this->ApplyForce(force);
     // Consommation d'énergie due au mouvement 
-    mEnergy -= mVelocity.Distance(Vector2D(0, 0)) * deltaTime * 0.1f; 
+    mEnergy -= mVelocity.Distance(Vector2D(0, 0)) * deltaTime * 0.1f;
+    
     
 } 
 // 🍽 MANGER
@@ -166,18 +175,27 @@ Color Entity::CalculateColorBasedOnState() const {
 } 
  Vector2D Entity::SeekFood(const std::vector<Food>& foodSources) const {
    std::vector<Vector2D>searchFood;
+     Vector2D desireDirection{0.0f , 0.0f};
    float minDist = std::numeric_limits<float>::max();
    //boucle qui parcours la liste de nourriture
    for(const auto& food :foodSources ){
     float Dist = position.Distance(food.position);
-    if(Dist<minDist && Dist){
-        minDist=Dist;
-      
-        return food.position; //permet de retourner la position de la nourriture trouvee
+    if(Dist < minDist ){
+        minDist = Dist;
+        desireDirection = Vector2D(food.position.x-position.x,food.position.y-position.y); 
+    
     }
+    
    }
-   return Vector2D{0,0};
+   //normalisation de la direction 
+   float lenght = std::sqrt(desireDirection.x*desireDirection.x+desireDirection.y*desireDirection.y);
+    if(lenght>0.0f){
+    desireDirection.x/=lenght;
+    desireDirection.y/=lenght;
+    }
+   return desireDirection; //permet de retourner la position de la nourriture trouvee
  }
+ 
     Vector2D Entity::AvoidPredators(const std::vector<Entity>& predators) const {
 float minDist = std::numeric_limits<float>::max();
 const Entity* close=nullptr;
@@ -186,7 +204,7 @@ for(const auto& pre:predators){
     if(pre.mType != EntityType::CARNIVORE)
     continue;
     float dist = position.Distance(pre.position);
-    if(dist<minDist ){
+    if(dist < minDist ){
     minDist = dist;                             
     close = &pre;
    }else if(!close) {
@@ -199,21 +217,25 @@ for(const auto& pre:predators){
 }
 Vector2D Entity::StayInBounds (float worldWidth, float worldHeight) const{
    float w=worldWidth, h=worldHeight;
-   Vector2D f,p=position;
+   Vector2D p=position;
    
  if (p.x<0){
-   f.x=-p.x; 
+   p.x=6.03f; 
 }
- if(p.x>w){
-  f.x=w-p.x;
+ if(p.x>w-6.02f){
+  p.x=w-6.02f;
 }
  if(p.y<0){
-  f.y=-p.y;
+  p.y=6.02f;
 }
  if(p.y>h){
-  f.y=h-p.y;
+  p.y=h-6.0f;
 }
-return f;
+return p;
+}
+void Entity::ApplyForce(Vector2D force){
+    mVelocity = mVelocity + force;
+     
 }
 
 // RENDU GRAPHIQUE 

@@ -1,4 +1,5 @@
-#include "Core/Ecosystem.h" 
+#include "Core/Ecosystem.h"
+#include"Core/Entity.h" 
 #include <algorithm> 
 #include <iostream> 
 namespace Ecosystem { 
@@ -35,10 +36,10 @@ void Ecosystem::Initialize(int initialHerbivores, int initialCarnivores, int ini
     std::cout << "🌱Écosystème initialisé avec " << mEntities.size() << " entités" <<std::endl;
 } 
 // MISE À JOUR 
-void Ecosystem::Update(float deltaTime) { 
+void Ecosystem::Update(float deltaTime,const std::vector<Food>& foodSources ) { 
     // Mise à jour de toutes les entités 
     for (auto& entity : mEntities) { 
-        entity->Update(deltaTime); 
+        entity->Update(deltaTime,foodSources); 
     }
     // Gestion des comportements 
     HandleEating(); 
@@ -100,8 +101,21 @@ void Ecosystem::HandleEating() {
             // Les plantes génèrent de l'énergie 
             entity->Eat(0.1f); 
         } 
+        if (entity->GetType() == EntityType::HERBIVORE){
+            Vector2D sh = entity->SeekFood(mFoodSources);
+            entity->ApplyForce(sh);
+        } 
+        if (entity->GetType() == EntityType::CARNIVORE || entity->GetType() == EntityType::HERBIVORE){
+            Vector2D g;
+           
+            entity->ApplyForce(g);
+           
+        } 
+        
     }
- } 
+        
+}
+
 // MISE À JOUR DES STATISTIQUES 
 void Ecosystem::UpdateStatistics() { 
     mStats.totalHerbivores = 0; 
