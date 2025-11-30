@@ -8,5 +8,23 @@
  - Capacité des entités a fuir les prédateurs (en utilisant les vecteurs et les forces)
  ## GUIDE DU PROJET
  1.On commence par la création des structures Vector2D; Food,Color
- ''' cpp
- - 2.Creation des fichiers selon la structures :
+  cpp
+ 2.Creation des fichiers selon la structures :
+mon_projet/
+|
+|---Include/
+      |
+      |--Core/
+      |---|Structs.h
+      |    |--Entity.h
+      |    |--Ecosystem.h
+      |    |--GameEngine.h
+      |--Graphic/
+          |
+          |--window.h
+          |--renderer.
+          
+## CARACTERISTIQUES DES FICHIERS
+- Entity : permet de gerer les besoins en nourritues 
+      
+      
