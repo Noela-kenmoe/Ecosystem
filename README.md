@@ -2,7 +2,7 @@
 ## DESCRIPTION
  
  Ici il s'agit de la creation d'un ecosysteme virtuel avec des entités intelligentes qui peuvent se deplacer, fuir les predateurs ; chercher leurs propres nourritues et meme se reproduire
- ## window;FONCTIONNALITES REQUISENT 
+ ## window; FONCTIONNALITES REQUISENT 
  - Capacité des entités a ce déplacer
  - Capacité des entités a chercher de la nourriture
  - Capacité des entités a fuir les prédateurs (en utilisant les vecteurs et les forces)
