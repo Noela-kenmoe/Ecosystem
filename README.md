@@ -7,5 +7,6 @@
  - Capacité des entités a chercher de la nourriture
  - Capacité des entités a fuir les prédateurs (en utilisant les vecteurs et les forces)
  ## GUIDE DU PROJET
- 1.On commence par la création des structures Vector2D; Food,Clor
- 2.Creation des fichiers selon la structures :
+ 1.On commence par la création des structures Vector2D; Food,Color
+ ''' cpp
+ - 2.Creation des fichiers selon la structures :
